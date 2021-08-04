@@ -148,7 +148,6 @@ const styles = StyleSheet.create({
   iconsContainer: {
     flexDirection: 'row',
     padding: 10,
-    // backgroundColor: '#432'
   },
   iconsDivider: {
     width: 1,
