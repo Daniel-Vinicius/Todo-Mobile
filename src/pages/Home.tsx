@@ -5,6 +5,11 @@ import { Header } from '../components/Header';
 import { Task, TasksList } from '../components/TasksList';
 import { TodoInput } from '../components/TodoInput';
 
+interface HandleEditTextProps {
+  taskId: number;
+  taskNewTitle: string;
+}
+
 export function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
@@ -18,7 +23,7 @@ export function Home() {
     const taskAlreadyExists = tasks.find(task => task.title === newTask.title);
 
     if (taskAlreadyExists) {
-      return Alert.alert('Você não pode cadastrar uma task com o mesmo nome');
+      return Alert.alert("Task já cadastrada", 'Você não pode cadastrar uma task com o mesmo nome');
     }
 
     return setTasks(oldTasks => [...oldTasks, newTask]);
@@ -44,6 +49,11 @@ export function Home() {
     )
   }
 
+  function handleEditTask({ taskId, taskNewTitle }: HandleEditTextProps) {
+    const newTasks = tasks.map(task => task.id === taskId ? { ...task, title: taskNewTitle } : task);
+    setTasks(newTasks);
+  }
+
   return (
     <View style={styles.container}>
       <Header tasksCounter={tasks.length} />
@@ -54,6 +64,7 @@ export function Home() {
         tasks={tasks}
         toggleTaskDone={handleToggleTaskDone}
         removeTask={handleRemoveTask}
+        editTask={handleEditTask}
       />
     </View>
   )
