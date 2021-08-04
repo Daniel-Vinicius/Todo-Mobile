@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 
 import { Header } from '../components/Header';
 import { Task, TasksList } from '../components/TasksList';
@@ -15,7 +15,13 @@ export function Home() {
       title: newTaskTitle
     };
 
-    setTasks(oldTasks => [...oldTasks, newTask]);
+    const taskAlreadyExists = tasks.find(task => task.title === newTask.title);
+
+    if (taskAlreadyExists) {
+      return Alert.alert('Você não pode cadastrar uma task com o mesmo nome');
+    }
+
+    return setTasks(oldTasks => [...oldTasks, newTask]);
   }
 
   function handleToggleTaskDone(id: number) {
@@ -24,7 +30,18 @@ export function Home() {
   }
 
   function handleRemoveTask(id: number) {
-    setTasks(tasks.filter(task => task.id !== id));
+    Alert.alert("Remover todo", `Tem certeza que você deseja remover esse todo?`, [
+      {
+        text: "Não",
+        style: "cancel",
+      },
+      {
+        text: "Sim",
+        onPress: () => {
+          setTasks(tasks.filter(task => task.id !== id));
+        }
+      }]
+    )
   }
 
   return (
@@ -33,10 +50,10 @@ export function Home() {
 
       <TodoInput addTask={handleAddTask} />
 
-      <TasksList 
-        tasks={tasks} 
+      <TasksList
+        tasks={tasks}
         toggleTaskDone={handleToggleTaskDone}
-        removeTask={handleRemoveTask} 
+        removeTask={handleRemoveTask}
       />
     </View>
   )
